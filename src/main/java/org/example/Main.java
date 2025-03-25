@@ -13,13 +13,13 @@ public class Main {
 
         System.out.println("==프로그램 시작==");
 
-        int lastArticleId = 3;
-        int memberId = 3;
-        int active = 0;
-        String loginname = null;
+        int lastArticleId = 3; // 게시물 고유 번호
+        int memberId = 3; //회원 고유 번호
+        int active = 0; // 로그인 활성 상태 1: 활성, 0:비활성
+        String loginname = null; // 로그인 member 이름
 
-        makeTestData();
-        makeTestMember();
+        makeTestData(); //테스트 데이터 생성
+        makeTestMember(); //테스트 회원 생성
 
         while (true) {
             System.out.print("명령어) ");
@@ -152,7 +152,7 @@ public class Main {
 
             } else if(cmd.equals("member join")) {
                 System.out.println("==회원가입==");
-                memberId++;
+                memberId++; //member고유 아이디 부여
                 System.out.print("이름 입력: ");
                 String name = sc.nextLine();
                 String loginId;
@@ -161,31 +161,31 @@ public class Main {
                     loginId = sc.nextLine();
                     int num = 0;
                     for (Member member : members) {
-                        if (loginId.equals(member.getLoginId())) {
-                            num++;
+                        if (loginId.equals(member.getLoginId())) { // 겹치는 아니디가 존재하는지 확인
+                            num++; //겹치면 ++
                         }
                     }
-                    if (num == 0) {
+                    if (num == 0) { // 겹치는게 없다면 pass
                         break;
                     }
-                    System.out.println("아이디가 중복되었습니다.");
+                    System.out.println("ID가 중복되었습니다."); //겹치면 다시 입력
                 }
-                System.out.print("PassWord 입력: ");
-                String loginPw = sc.nextLine();
-
+                String loginPw;
                 while (true) {
-                    System.out.print("PassWord 확인: ");
-                    String loginPw2 = sc.nextLine();
+                    System.out.print("PassWord 입력: ");
+                    loginPw = sc.nextLine();
+                    System.out.print("PassWord 확인: "); //password 맞는지 재입력
+                    String loginPw2 = sc.nextLine(); // 재입력한 password
 
-                    if (loginPw.equals(loginPw2)) {
+                    if (loginPw.equals(loginPw2)) { // 두개가 동일하면 pass
                         break;
                     }
-                    System.out.println("PassWord가 일치하지 않습니다.");
+                    System.out.println("PassWord가 일치하지 않습니다."); //아니면 다시입력
                 }
 
                 String aregDate = Util.getNowStr();
                 Member member = new Member(memberId, name, loginId, loginPw, aregDate);
-                members.add(member);
+                members.add(member); //member list 추가
                 System.out.println("회원가입이 완료되었습니다.");
 
             } else if(cmd.equals("member list")) {
@@ -204,42 +204,42 @@ public class Main {
 
                     }
                 }
-
+                //로그인 기능
             } else if(cmd.equals("login")) {
-                if(active == 0) {
+                if(active == 0) { //login이 되어있지 않다면 login 진행
                     System.out.print("ID 입력: ");
                     String loginId = sc.nextLine();
                     System.out.print("PassWord 입력: ");
                     String loginPw = sc.nextLine();
-                    int count = 0;
+                    int count = 0; // 아이디가 일치하지 않는 갯수 확인
                     for (Member member : members) {
                         if (member.getLoginId().equals(loginId) && member.getLoginPw().equals(loginPw)) {
-                            loginname = member.getName();
+                            loginname = member.getName(); //아이디와 비번이 같다면 로그인
                             System.out.println(loginname + "님 로그인되었습니다.");
-                            active++;
+                            active++; //active = 1 ;활성
                             break;
-                        } else if (member.getLoginId().equals(loginId)) {
+                        } else if (member.getLoginId().equals(loginId)) { //아이디는 같은데 비번이 다를경우
                             System.out.println("Password 확인바랍니다.");
                             break;
                         } else {
-                            count++;
+                            count++; //아이디가 일치하지 않을 경우
                         }
                     }
-                    if (count == members.size()) {
+                    if (count == members.size()) { //count가 배열의 사이즈와같으면 존재하지 않는 ID
                         System.out.println("존재하지 않는 ID입니다.");
                     }
                 }
-                else{
+                else{ // active가 0이 아니라면 => 이미 로그인 상태
                     System.out.println("이미 로그인 되어 있습니다.");
                 }
 
             } else if(cmd.equals("logout")) {
-                if(active == 1) {
+                if(active == 1) { // active가 활성되어 있다면 로그아웃
                     System.out.println(loginname + "님 로그아웃되었습니다.");
-                    active--;
-                    loginname = null;
+                    active--; //비활성 상태로 만듬
+                    loginname = null; //사용자 비우기
                 }
-                else{
+                else{ //활성 상태가 아니라면
                     System.out.println("로그인이 되어있지 않습니다.");
                 }
 
@@ -252,14 +252,14 @@ public class Main {
         System.out.println("==프로그램 끝==");
         sc.close();
     }
-
+    //테스트 회원 생성
     private static void makeTestMember() {
         System.out.println("==테스트 회원 생성==");
         members.add(new Member(1,"이름1","아이디1","비밀번호1",Util.getNowStr()));
         members.add(new Member(2,"이름2","아이디2","비밀번호2",Util.getNowStr()));
         members.add(new Member(3,"이름3","아이디3","비밀번호3",Util.getNowStr()));
     }
-
+    //id에 해당하는 객체 찾기
     private static Article getArticleById(int id) {
 //        for (int i = 0; i < articles.size(); i++) {
 //            Article article = articles.get(i);
