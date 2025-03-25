@@ -13,59 +13,13 @@ public class Main {
 
         System.out.println("==프로그램 시작==");
 
-        while(true) {
-            System.out.print("회원가입하시겠습니까?(yes/no): ");
-            String input = sc.nextLine();
-            if(input.equals("yes")) {
-                System.out.println("==회원가입==");
-                int memberId = 0;
-                memberId++;
-                System.out.print("이름 입력: ");
-                String name = sc.nextLine();
-                String loginId;
-                while(true){
-                    System.out.print("ID 입력: ");
-                    loginId = sc.nextLine();
-                    int num = 0;
-                    for (Member member : members) {
-                        if (loginId.equals(member.getLoginId())) {
-                            num++;
-                        }
-                    }
-                    if(num == 0){
-                        break;
-                    }
-                    System.out.println("아이디가 중복되었습니다.");
-                }
-                System.out.print("PassWord 입력: ");
-                String loginPw = sc.nextLine();
-
-                while(true){
-                    System.out.print("PassWord 확인: ");
-                    String loginPw2 = sc.nextLine();
-
-                    if(loginPw.equals(loginPw2)){
-                        break;
-                    }
-                    System.out.println("PassWord가 일치하지 않습니다.");
-                }
-                String aregDate = Util.getNowStr();
-                Member member = new Member(memberId,name,loginId,loginPw,aregDate);
-                members.add(member);
-                System.out.println("회원가입이 완료되었습니다.");
-            }
-
-            else if(input.equals("no")) {
-                break;
-            }
-            else {
-                System.out.println("올바른 대답이 아닙니다.");
-            }
-        }
-
         int lastArticleId = 3;
+        int memberId = 3;
+        int active = 0;
+        String loginname = null;
 
         makeTestData();
+        makeTestMember();
 
         while (true) {
             System.out.print("명령어) ");
@@ -170,6 +124,7 @@ public class Main {
                 }
                 articles.remove(foundArticle);
                 System.out.println(id + "번 게시글이 삭제되었습니다");
+
             } else if (cmd.startsWith("article modify")) {
                 System.out.println("==게시글 수정==");
 
@@ -194,6 +149,100 @@ public class Main {
                 foundArticle.setUpdateDate(Util.getNowStr());
 
                 System.out.println(id + "번 게시글이 수정되었습니다");
+
+            } else if(cmd.equals("member join")) {
+                System.out.println("==회원가입==");
+                memberId++;
+                System.out.print("이름 입력: ");
+                String name = sc.nextLine();
+                String loginId;
+                while (true) {
+                    System.out.print("ID 입력: ");
+                    loginId = sc.nextLine();
+                    int num = 0;
+                    for (Member member : members) {
+                        if (loginId.equals(member.getLoginId())) {
+                            num++;
+                        }
+                    }
+                    if (num == 0) {
+                        break;
+                    }
+                    System.out.println("아이디가 중복되었습니다.");
+                }
+                System.out.print("PassWord 입력: ");
+                String loginPw = sc.nextLine();
+
+                while (true) {
+                    System.out.print("PassWord 확인: ");
+                    String loginPw2 = sc.nextLine();
+
+                    if (loginPw.equals(loginPw2)) {
+                        break;
+                    }
+                    System.out.println("PassWord가 일치하지 않습니다.");
+                }
+
+                String aregDate = Util.getNowStr();
+                Member member = new Member(memberId, name, loginId, loginPw, aregDate);
+                members.add(member);
+                System.out.println("회원가입이 완료되었습니다.");
+
+            } else if(cmd.equals("member list")) {
+                System.out.println("==member 목록==");
+                if (members.size() == 0) {
+                    System.out.println("아무도 없어");
+                } else {
+                    System.out.println("   고유ID    /     가입날짜       /   ID    /    이름   ");
+                    for (int i = members.size() - 1; i >= 0; i--) {
+                        Member member = members.get(i);
+                        if (Util.getNowStr().split(" ")[0].equals(member.getRegDate().split(" ")[0])) {
+                            System.out.printf("  %d   /    %s        /    %s     /    %s   \n", member.getId(), member.getRegDate().split(" ")[1], member.getLoginId(), member.getName());
+                        } else {
+                            System.out.printf("  %d   /    %s        /    %s     /    %s   \n", member.getId(), member.getRegDate().split(" ")[0], member.getLoginId(), member.getName());
+                        }
+
+                    }
+                }
+
+            } else if(cmd.equals("login")) {
+                if(active == 0) {
+                    System.out.print("ID 입력: ");
+                    String loginId = sc.nextLine();
+                    System.out.print("PassWord 입력: ");
+                    String loginPw = sc.nextLine();
+                    int count = 0;
+                    for (Member member : members) {
+                        if (member.getLoginId().equals(loginId) && member.getLoginPw().equals(loginPw)) {
+                            loginname = member.getName();
+                            System.out.println(loginname + "님 로그인되었습니다.");
+                            active++;
+                            break;
+                        } else if (member.getLoginId().equals(loginId)) {
+                            System.out.println("Password 확인바랍니다.");
+                            break;
+                        } else {
+                            count++;
+                        }
+                    }
+                    if (count == members.size()) {
+                        System.out.println("존재하지 않는 ID입니다.");
+                    }
+                }
+                else{
+                    System.out.println("이미 로그인 되어 있습니다.");
+                }
+
+            } else if(cmd.equals("logout")) {
+                if(active == 1) {
+                    System.out.println(loginname + "님 로그아웃되었습니다.");
+                    active--;
+                    loginname = null;
+                }
+                else{
+                    System.out.println("로그인이 되어있지 않습니다.");
+                }
+
             } else {
                 System.out.println("사용할 수 없는 명령어입니다");
             }
@@ -202,6 +251,13 @@ public class Main {
 
         System.out.println("==프로그램 끝==");
         sc.close();
+    }
+
+    private static void makeTestMember() {
+        System.out.println("==테스트 회원 생성==");
+        members.add(new Member(1,"이름1","아이디1","비밀번호1",Util.getNowStr()));
+        members.add(new Member(2,"이름2","아이디2","비밀번호2",Util.getNowStr()));
+        members.add(new Member(3,"이름3","아이디3","비밀번호3",Util.getNowStr()));
     }
 
     private static Article getArticleById(int id) {
