@@ -114,19 +114,30 @@ public class Main {
                 } else {
                     String findword = cmd.split(" ")[2];
                     List<Article> words = new ArrayList<>();
+
                     for (Article article : articles) {
                         if (article.getTitle().contains(findword)) {
                             words.add(article);
                         }
                     }
-                    System.out.println("   번호    /     날짜       /   제목     /    내용   ");
-                    for (int i = words.size() - 1; i >= 0; i--) {
-                        Article article = words.get(i);
-                        if (Util.getNowStr().split(" ")[0].equals(article.getRegDate().split(" ")[0])) {
-                            System.out.printf("  %d   /    %s        /    %s     /    %s   \n", article.getId(), article.getRegDate().split(" ")[1], article.getTitle(), article.getBody());
-                        } else {
-                            System.out.printf("  %d   /    %s        /    %s     /    %s   \n", article.getId(), article.getRegDate().split(" ")[0], article.getTitle(), article.getBody());
+                    for (Article article : articles) {
+                        if (article.getTitle().contains(findword)) {
+                            words.add(article);
                         }
+                    }
+                    if(words.size() > 0){
+                        System.out.println("   번호    /     날짜       /   제목     /    내용   ");
+                        for (int i = words.size() - 1; i >= 0; i--) {
+                            Article article = words.get(i);
+                            if (Util.getNowStr().split(" ")[0].equals(article.getRegDate().split(" ")[0])) {
+                                System.out.printf("  %d   /    %s        /    %s     /    %s   \n", article.getId(), article.getRegDate().split(" ")[1], article.getTitle(), article.getBody());
+                            } else {
+                                System.out.printf("  %d   /    %s        /    %s     /    %s   \n", article.getId(), article.getRegDate().split(" ")[0], article.getTitle(), article.getBody());
+                            }
+                        }
+                    }
+                    else{
+                        System.out.println("헤당 게시물은 존재하지 않습니다.");
                     }
                 }
             } else if (cmd.startsWith("article detail")) {
