@@ -32,43 +32,48 @@ public class membercontroller {
     }
 
     public static void doJoin() {
-        System.out.println("==회원가입==");
-        memberId++; //member고유 아이디 부여
-        System.out.print("이름 입력: ");
-        String name = sc.nextLine();
-        String loginId;
-        while (true) {
-            System.out.print("ID 입력: ");
-            loginId = sc.nextLine();
-            int num = 0;
-            for (Member member : members) {
-                if (loginId.equals(member.getLoginId())) { // 겹치는 아니디가 존재하는지 확인
-                    num++; //겹치면 ++
+        if (App.active == 0) {
+            System.out.println("==회원가입==");
+            memberId++; //member고유 아이디 부여
+            System.out.print("이름 입력: ");
+            String name = sc.nextLine();
+            String loginId;
+            while (true) {
+                System.out.print("ID 입력: ");
+                loginId = sc.nextLine();
+                int num = 0;
+                for (Member member : members) {
+                    if (loginId.equals(member.getLoginId())) { // 겹치는 아니디가 존재하는지 확인
+                        num++; //겹치면 ++
+                    }
                 }
+                if (num == 0) { // 겹치는게 없다면 pass
+                    break;
+                }
+                System.out.println("ID가 중복되었습니다."); //겹치면 다시 입력
             }
-            if (num == 0) { // 겹치는게 없다면 pass
-                break;
+            String loginPw;
+            while (true) {
+                System.out.print("PassWord 입력: ");
+                loginPw = sc.nextLine();
+                System.out.print("PassWord 확인: "); //password 맞는지 재입력
+                String loginPw2 = sc.nextLine(); // 재입력한 password
+
+                if (loginPw.equals(loginPw2)) { // 두개가 동일하면 pass
+                    break;
+                }
+                System.out.println("PassWord가 일치하지 않습니다."); //아니면 다시입력
             }
-            System.out.println("ID가 중복되었습니다."); //겹치면 다시 입력
+
+            String aregDate = Util.getNowStr();
+            Member member = new Member(memberId, name, loginId, loginPw, aregDate);
+            members.add(member); //member list 추가
+            System.out.println("회원가입이 완료되었습니다.");
+
         }
-        String loginPw;
-        while (true) {
-            System.out.print("PassWord 입력: ");
-            loginPw = sc.nextLine();
-            System.out.print("PassWord 확인: "); //password 맞는지 재입력
-            String loginPw2 = sc.nextLine(); // 재입력한 password
-
-            if (loginPw.equals(loginPw2)) { // 두개가 동일하면 pass
-                break;
-            }
-            System.out.println("PassWord가 일치하지 않습니다."); //아니면 다시입력
+        else{
+            System.out.println("이미 회원가입 되어있습니다.");
         }
-
-        String aregDate = Util.getNowStr();
-        Member member = new Member(memberId, name, loginId, loginPw, aregDate);
-        members.add(member); //member list 추가
-        System.out.println("회원가입이 완료되었습니다.");
-
     }
 
     public static void doLogin() {

@@ -6,6 +6,7 @@ public class Member {
     private String loginId;
     private String loginPw;
     private String regDate;
+
     public Member(int id, String name, String loginId, String loginPw, String regDate) {
         this.id = id;
         this.name = name;

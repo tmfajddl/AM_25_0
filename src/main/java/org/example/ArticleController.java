@@ -40,7 +40,7 @@ public class ArticleController {
     public static void doList(String cmd) {
         if(cmd.equals("article list")) {
             System.out.println("==게시글 목록==");
-            if (articles.size() == 0) {
+            if (articles.isEmpty()) {
                 System.out.println("아무것도 없어");
             } else {
                 System.out.println("   번호    /     날짜       /   제목     /        내용       /      작성자");
@@ -67,7 +67,9 @@ public class ArticleController {
                     words.add(article);
                 }
             }
-            if (words.size() > 0) {
+            if (!words.isEmpty()) {
+                System.out.println("헤당 게시물은 존재하지 않습니다.");
+            } else {
                 System.out.println("   번호    /     날짜       /   제목     /        내용       /      작성자");
                 for (int i = words.size() - 1; i >= 0; i--) {
                     Article article = words.get(i);
@@ -77,8 +79,6 @@ public class ArticleController {
                         System.out.printf("  %d   /    %s        /    %s     /       %s      /      %s \n", article.getId(), article.getRegDate().split(" ")[0], article.getTitle(), article.getBody(), article.getWriter());
                     }
                 }
-            } else {
-                System.out.println("헤당 게시물은 존재하지 않습니다.");
             }
         }
     }

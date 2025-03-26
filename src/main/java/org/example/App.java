@@ -1,17 +1,15 @@
 package org.example;
-import java.util.List;
 import java.util.Scanner;
 
 public class App {
-    static List<Article> articles;
-    static List<Member> members;
     static int active = 0; // 로그인 활성 상태 1: 활성, 0:비활성
     static String loginname = null; // 로그인 member 이름
 
     public void run(){
         Scanner sc = new Scanner(System.in);
-        membercontroller membercontroller = new membercontroller(sc);
-        ArticleController articlecontroller = new ArticleController(sc);
+        new membercontroller(sc);
+        new ArticleController(sc);
+
         System.out.println("==프로그램 시작==");
 
         ArticleController.makeTestData(); //테스트 데이터 생성
@@ -21,20 +19,19 @@ public class App {
             System.out.print("명령어) ");
             String cmd = sc.nextLine().trim();
 
-            if (cmd.length() == 0) {
+            if (cmd.isEmpty()) {
                 System.out.println("명령어를 입력하세요");
                 continue;
             }
             if (cmd.equals("exit")) {
                 break;
             }
-
             if (cmd.equals("article write")) {
                 ArticleController.doWrite();
             } else if (cmd.contains("article list")) {
                 ArticleController.doList(cmd);
             } else if (cmd.startsWith("article detail")) {
-               ArticleController.doDetail(cmd);
+                ArticleController.doDetail(cmd);
             } else if (cmd.startsWith("article delete")) {
                 ArticleController.doDelete(cmd);
             } else if (cmd.startsWith("article modify")) {
