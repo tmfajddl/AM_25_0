@@ -1,14 +1,13 @@
-package org.example;
+package org.example.dto;
 
-public class Article {
-    private int id;
-    private String regDate;
+public class Article extends Dto {
+
     private String updateDate;
     private String title;
     private String body;
     private String writer;
 
-    public Article(int id, String regDate, String updateDate, String title, String body,String writer) {
+    public Article(int id, String regDate, String updateDate, String title, String body, String writer) {
         this.id = id;
         this.regDate = regDate;
         this.updateDate = updateDate;
